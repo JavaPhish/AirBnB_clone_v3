@@ -45,7 +45,7 @@ def states_id(state_id):
             storage.save()
             return jsonify({}), 200
         if request.method == 'PUT':
-            if request.get_json():
+            if request.is_json:
                 for name, value in request.get_json().items():
                     if hasattr(selected_state, name):
                         setattr(selected_state, name, value)
