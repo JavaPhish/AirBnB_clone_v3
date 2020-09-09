@@ -45,13 +45,15 @@ def states_id(state_id):
             storage.save()
             return jsonify({}), 200
         if request.method == 'PUT':
+            ignore_keys = ['id', 'created_at', 'updated_at']
             if request.is_json:
                 for name, value in request.get_json().items():
-                    if hasattr(selected_state, name):
-                        setattr(selected_state, name, value)
-                        selected_state.save()
-                        return jsonify(selected_state.to_dict()), 200
+                    if name not in ignore_keys:
+                        if hasattr(selected_state, name):
+                            setattr(selected_state, name, value)
+                            selected_state.save()
+                            return jsonify(selected_state.to_dict()), 200
             else:
-                abort(400, "Missing name")
+                abort(400, "Not a JSON")
     else:
         abort(404)

@@ -53,13 +53,15 @@ def city_id(city_id):
             storage.save()
             return jsonify({}), 200
         if request.method == 'PUT':
+            ignore_keys = ['id', 'state_id', 'created_at', 'updated_at']
             if request.get_json():
                 for name, value in request.get_json().items():
-                    if hasattr(selected_city, name):
-                        setattr(selected_city, name, value)
-                        selected_city.save()
-                        storage.save()
-                        return jsonify(selected_city.to_dict()), 200
+                    if name not in ignore_keys:
+                        if hasattr(selected_city, name):
+                            setattr(selected_city, name, value)
+                            selected_city.save()
+                            storage.save()
+                            return jsonify(selected_city.to_dict()), 200
             else:
                 abort(400, "Not a JSON")
     else:
