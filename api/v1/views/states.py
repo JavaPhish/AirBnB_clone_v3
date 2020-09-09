@@ -50,7 +50,6 @@ def states_id(state_id):
                     if hasattr(selected_state, name):
                         setattr(selected_state, name, value)
                         selected_state.save()
-                        storage.save()
                         return jsonify(selected_state.to_dict()), 200
             else:
                 abort(400, "Not a JSON")
