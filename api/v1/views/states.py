@@ -7,7 +7,11 @@ from models import storage
 from models.state import State
 
 
-@app_views.route('/states/', methods=['GET', 'POST'])
+@app_views.route('/states/', methods=[
+                                     'GET',
+                                     'POST',
+                                     'DELETE',
+                                     'PUT'])
 def states():
     """get state instance
     and post new state instance
@@ -30,7 +34,11 @@ def states():
             abort(400, "Not a JSON")
 
 
-@app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'])
+@app_views.route('/states/<state_id>', methods=[
+                                               'GET',
+                                               'DELETE',
+                                               'PUT',
+                                               'POST'])
 def states_id(state_id):
     """get state by id
     delete by id
