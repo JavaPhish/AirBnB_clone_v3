@@ -2,7 +2,7 @@
 """import app_views City views
 """
 from api.v1.views import app_views
-from flask import jsonify, abort, request
+from flask import jsonify, abort, request, make_response
 from models import storage
 from models.state import State
 from models.city import City
@@ -31,9 +31,11 @@ def cities(state_id):
                     storage.save()
                     return jsonify(new_city_instance.to_dict()), 201
                 else:
-                    abort(400, "Missing name")
+                    error_message = jsonify(error="Missing name")
+                    return make_response(error_message, 400)
             else:
-                abort(400, "Not a JSON")
+                error_message = jsonify(error="Not a JSON")
+                return make_response(error_message, 400)
     else:
         abort(404)
 
@@ -63,6 +65,7 @@ def city_id(city_id):
                             storage.save()
                             return jsonify(selected_city.to_dict()), 200
             else:
-                abort(400, "Not a JSON")
+                error_message = jsonify(error="Not a JSON")
+                return make_response(error_message, 400)
     else:
         abort(404)
