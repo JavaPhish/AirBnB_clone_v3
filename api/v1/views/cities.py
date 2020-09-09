@@ -43,12 +43,7 @@ def city_id(city_id):
             return jsonify(selected_city.to_dict())
         if request.method == 'DELETE':
             selected_city.delete()
-            selected_city.delete()
-            for v in storage.all(State).values():
-                if v == selected_city:
-                    return "YES"
-                else:
-                    return "NO"
+            storage.save()
             return jsonify({}), 200
         if request.method == 'PUT':
             if request.get_json():
