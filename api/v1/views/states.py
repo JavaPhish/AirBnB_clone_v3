@@ -7,16 +7,21 @@ from models import storage
 from models.state import State
 
 
-@app_views.route('/states/', methods=['GET', 'POST'])
-def states():
-    """get state instance
-    and post new state instance
+@app_views.route('/states/', methods=['GET'])
+def all_states():
+    """get all state instance json format
     """
     if request.method == 'GET':
         json_repr = []
         for v in storage.all(State).values():
             json_repr.append(v.to_dict())
         return make_response(jsonify(json_repr))
+
+
+@app_views.route('/states/', methods=['POST'])
+def post_state():
+    """Post or make new states
+    """
     if request.method == 'POST':
         if request.is_json:
             if 'name' in request.get_json().keys():
@@ -33,21 +38,37 @@ def states():
             return make_response(error_message, 400)
 
 
-@app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'])
-def states_id(state_id):
-    """get state by id
-    delete by id
-    modify state instance
+@app_views.route('/states/<state_id>', methods=['GET'])
+def one_state(state_id):
+    """get one state by id
     """
-    selected_state = storage.get(State, state_id)
-    if selected_state is not None:
-        if request.method == 'GET':
+    if request.method == 'GET':
+        selected_state = storage.get(State, state_id)
+        if selected_state is not None:
             return make_response(jsonify(selected_state.to_dict()))
-        if request.method == 'DELETE':
+        else:
+            abort(404)
+
+
+@app_views.route('/states/<state_id>', methods=['DELETE'])
+def delete_state(state_id):
+    """delete state by id
+    """
+    if request.method == 'DELETE':
+        selected_state = storage.get(State, state_id)
+        if selected_state is not None:
             selected_state.delete()
             storage.save()
             return make_response(jsonify({}), 200)
-        if request.method == 'PUT':
+        else:
+            abort(404)
+
+
+@app_views.route('/states/<state_id>', methods=['PUT'])
+def put_state(state_id):
+    if request.method == 'PUT':
+        selected_state = storage.get(State, state_id)
+        if selected_state is not None:
             ignore_keys = ['id', 'created_at', 'updated_at']
             if request.is_json:
                 for name, value in request.get_json().items():
@@ -60,5 +81,5 @@ def states_id(state_id):
             else:
                 error_message = jsonify(error="Not a JSON")
                 return make_response(error_message, 400)
-    else:
-        abort(404)
+        else:
+            abort(404)
