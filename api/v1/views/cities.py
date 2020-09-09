@@ -20,7 +20,7 @@ def cities(state_id):
             for v in storage.all(City).values():
                 if v.state_id == state_id:
                     json_repr.append(v.to_dict())
-            return jsonify(json_repr), 200
+            return make_response(jsonify(json_repr), 200)
         if request.method == 'POST':
             if request.get_json():
                 if 'name' in request.get_json().keys():
@@ -28,8 +28,8 @@ def cities(state_id):
                     new_city_instance.state_id = state_id
                     new_city_instance.name = request.get_json().get('name')
                     new_city_instance.save()
-                    storage.save()
-                    return jsonify(new_city_instance.to_dict()), 201
+                    new_ins_res = jsonify(new_city_instance.to_dict())
+                    return make_response(new_ins_res, 201)
                 else:
                     error_message = jsonify(error="Missing name")
                     return make_response(error_message, 400)
@@ -49,11 +49,11 @@ def city_id(city_id):
     selected_city = storage.get(City, city_id)
     if selected_city is not None:
         if request.method == 'GET':
-            return jsonify(selected_city.to_dict())
+            return make_response(jsonify(selected_city.to_dict()))
         if request.method == 'DELETE':
             selected_city.delete()
             storage.save()
-            return jsonify({}), 200
+            return make_response(jsonify({}), 200)
         if request.method == 'PUT':
             ignore_keys = ['id', 'state_id', 'created_at', 'updated_at']
             if request.get_json():
@@ -63,7 +63,8 @@ def city_id(city_id):
                             setattr(selected_city, name, value)
                             selected_city.save()
                             storage.save()
-                            return jsonify(selected_city.to_dict()), 200
+                            put_response = jsonify(selected_city.to_dict())
+                            return make_response(put_response, 200)
             else:
                 error_message = jsonify(error="Not a JSON")
                 return make_response(error_message, 400)
