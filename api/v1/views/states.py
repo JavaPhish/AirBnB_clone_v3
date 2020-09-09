@@ -18,16 +18,16 @@ def states():
             json_repr.append(v.to_dict())
         return jsonify(json_repr)
     if request.method == 'POST':
-        if request.get_json():
+        if request.is_json:
             if 'name' in request.get_json().keys():
                 new_state_instance = State()
                 new_state_instance.name = request.get_json().get('name')
                 new_state_instance.save()
                 return jsonify(new_state_instance.to_dict()), 201
             else:
-                abort(400, "Missing name")
+                return jsonify(message="Missing name"), 400
         else:
-            abort(400, "Not a JSON")
+            return jsonify(message="Not a JSON"), 400
 
 
 @app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'])
@@ -52,6 +52,6 @@ def states_id(state_id):
                         selected_state.save()
                         return jsonify(selected_state.to_dict()), 200
             else:
-                abort(400, "Not a JSON")
+                return jsonify(message="Not a JSON"), 400
     else:
         abort(404)
