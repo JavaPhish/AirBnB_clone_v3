@@ -30,7 +30,7 @@ def states():
             abort(400, "Not a JSON")
 
 
-@app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT',])
+@app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'])
 def states_id(state_id):
     """get state by id
     delete by id
