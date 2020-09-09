@@ -16,7 +16,6 @@ def states():
                 new_state_instance = State()
                 new_state_instance.name = request.get_json().get('name')
                 new_state_instance.save()
-                storage.save()
                 return jsonify(new_state_instance.to_dict()), 201
             else:
                 abort(400, "Missing name")
