@@ -10,6 +10,9 @@ from models.city import City
 
 @app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'])
 def cities(state_id):
+    """get city instance
+    and post new city instance
+    """
     selected_state = storage.get(State, state_id)
     json_repr = []
     if selected_state is not None:
@@ -37,6 +40,10 @@ def cities(state_id):
 
 @app_views.route('/cities/<city_id>', methods=['GET', 'DELETE', 'PUT'])
 def city_id(city_id):
+    """get city by id
+    delete by id
+    modify city instance
+    """
     selected_city = storage.get(City, city_id)
     if selected_city is not None:
         if request.method == 'GET':
