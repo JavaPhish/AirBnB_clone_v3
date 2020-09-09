@@ -16,14 +16,15 @@ def states():
         json_repr = []
         for v in storage.all(State).values():
             json_repr.append(v.to_dict())
-        return jsonify(json_repr)
+        return make_response(jsonify(json_repr))
     if request.method == 'POST':
         if request.is_json:
             if 'name' in request.get_json().keys():
                 new_state_instance = State()
                 new_state_instance.name = request.get_json().get('name')
                 new_state_instance.save()
-                return jsonify(new_state_instance.to_dict()), 201
+                post_response = jsonify(new_state_instance.to_dict())
+                return make_response(post_response, 201)
             else:
                 error_message = jsonify(error="Missing name")
                 return make_response(error_message, 400)
@@ -41,11 +42,11 @@ def states_id(state_id):
     selected_state = storage.get(State, state_id)
     if selected_state is not None:
         if request.method == 'GET':
-            return jsonify(selected_state.to_dict())
+            return make_response(jsonify(selected_state.to_dict()))
         if request.method == 'DELETE':
             selected_state.delete()
             storage.save()
-            return jsonify({}), 200
+            return make_response(jsonify({}), 200)
         if request.method == 'PUT':
             ignore_keys = ['id', 'created_at', 'updated_at']
             if request.is_json:
@@ -54,7 +55,8 @@ def states_id(state_id):
                         if hasattr(selected_state, name):
                             setattr(selected_state, name, value)
                             selected_state.save()
-                            return jsonify(selected_state.to_dict()), 200
+                            put_response = jsonify(selected_state.to_dict())
+                            return make_response(put_response, 200)
             else:
                 error_message = jsonify(error="Not a JSON")
                 return make_response(error_message, 400)
