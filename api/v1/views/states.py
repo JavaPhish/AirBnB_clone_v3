@@ -9,7 +9,14 @@ from models.state import State
 
 @app_views.route('/states/', methods=['GET', 'POST'])
 def states():
-    json_repr = []
+    """get state instance
+    and post new state instance
+    """
+    if request.method == 'GET':
+        json_repr = []
+        for v in storage.all(State).values():
+            json_repr.append(v.to_dict())
+        return jsonify(json_repr)
     if request.method == 'POST':
         if request.get_json():
             if 'name' in request.get_json().keys():
@@ -21,13 +28,14 @@ def states():
                 abort(400, "Missing name")
         else:
             abort(400, "Not a JSON")
-    for v in storage.all(State).values():
-        json_repr.append(v.to_dict())
-    return jsonify(json_repr)
 
 
 @app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'])
 def states_id(state_id):
+    """get state by id
+    delete by id
+    modify state instance
+    """
     selected_state = storage.get(State, state_id)
     if selected_state is not None:
         if request.method == 'GET':
