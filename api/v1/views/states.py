@@ -25,9 +25,9 @@ def states():
                 new_state_instance.save()
                 return jsonify(new_state_instance.to_dict()), 201
             else:
-                abort(400, message="Missing name")
+                abort(400, "Missing name")
         else:
-            abort(400, message="Not a JSON")
+            abort(400, "Not a JSON")
 
 
 @app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'])
@@ -52,6 +52,6 @@ def states_id(state_id):
                         selected_state.save()
                         return jsonify(selected_state.to_dict()), 200
             else:
-                abort(400, message="Missing name")
+                abort(400, "Missing name")
     else:
         abort(404)
