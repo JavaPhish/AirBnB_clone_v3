@@ -2,7 +2,7 @@
 """import app_views State views
 """
 from api.v1.views import app_views
-from flask import jsonify, abort, request
+from flask import jsonify, abort, request, make_response
 from models import storage
 from models.state import State
 
@@ -25,9 +25,11 @@ def states():
                 new_state_instance.save()
                 return jsonify(new_state_instance.to_dict()), 201
             else:
-                abort(400, "Missing name")
+                error_message = jsonify(error="Missing name")
+                return make_response(error_message, 400)
         else:
-            abort(400, "Not a JSON")
+            error_message = jsonify(error="Not a JSON")
+            return make_response(error_message, 400)
 
 
 @app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'])
@@ -54,6 +56,7 @@ def states_id(state_id):
                             selected_state.save()
                             return jsonify(selected_state.to_dict()), 200
             else:
-                abort(400, "Not a JSON")
+                error_message = jsonify(error="Not a JSON")
+                return make_response(error_message, 400)
     else:
         abort(404)
