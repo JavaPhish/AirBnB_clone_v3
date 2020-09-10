@@ -64,24 +64,23 @@ def delete_state(state_id):
 
 @app_views.route('/states/<state_id>', strict_slashes=False, methods=['PUT'])
 def put_state(state_id):
-    if request.method == 'PUT':
-        data = request.get_json()
-        if data is None:
-            error_message = jsonify(error="Not a JSON")
-            return make_response(error_message, 400)
+    data = request.get_json()
+    if data is None:
+        error_message = jsonify(error="Not a JSON")
+        return make_response(error_message, 400)
 
-        selected_state = storage.get(State, state_id)
-        if data is not None:
-            ignore_keys = ['id', 'created_at', 'updated_at']
-            if request.get_json():
-                for name, value in request.get_json().items():
-                    if name not in ignore_keys:
-                        if hasattr(selected_state, name):
-                            setattr(selected_state, name, value)
-                            selected_state.save()
-                            put_response = jsonify(selected_state.to_dict())
-                            return make_response(put_response, 200)
-                        else:
-                            abort(404)
-        else:
-            abort(404)
+    selected_state = storage.get(State, state_id)
+    if data is not None:
+        ignore_keys = ['id', 'created_at', 'updated_at']
+        if request.get_json():
+            for name, value in request.get_json().items():
+                if name not in ignore_keys:
+                    if hasattr(selected_state, name):
+                        setattr(selected_state, name, value)
+                        selected_state.save()
+                        put_response = jsonify(selected_state.to_dict())
+                        return make_response(put_response, 200)
+                    else:
+                        abort(404)
+    else:
+        abort(404)
