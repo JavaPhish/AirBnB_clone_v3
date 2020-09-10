@@ -24,6 +24,12 @@ def post_state():
     """
     if request.method == 'POST':
         try:
+            data = request.get_json()
+        except Exception:
+            error_message = jsonify(error="Not a JSON")
+            return make_response(error_message, 400)
+
+        if data is not None:
             if 'name' in request.get_json().keys():
                 new_state_instance = State()
                 new_state_instance.name = request.get_json().get('name')
@@ -33,9 +39,6 @@ def post_state():
             else:
                 error_message = jsonify(error="Missing name")
                 return make_response(error_message, 400)
-        except Exception as e:
-            error_message = jsonify(error="Not a JSON")
-            return make_response(error_message, 400)
 
 
 @app_views.route('/states/<state_id>', methods=['GET'])
@@ -68,19 +71,25 @@ def delete_state(state_id):
 @app_views.route('/states/<state_id>', methods=['PUT'])
 def put_state(state_id):
     if request.method == 'PUT':
+        try:
+            data = request.get_json()
+        except Exception:
+            error_message = jsonify(error="Not a JSON")
+            return make_response(error_message, 400)
+
         selected_state = storage.get(State, state_id)
         if selected_state is not None:
             ignore_keys = ['id', 'created_at', 'updated_at']
-            try:
+            if data is not None:
                 for name, value in request.get_json().items():
                     if name not in ignore_keys:
-                        if hasattr(selected_state, name):
+                        try:
                             setattr(selected_state, name, value)
                             selected_state.save()
                             put_response = jsonify(selected_state.to_dict())
                             return make_response(put_response, 200)
-            except Exception as e:
-                error_message = jsonify(error="Not a JSON")
-                return make_response(error_message, 400)
+                        except Exception:
+                            put_response = jsonify(error="Not an attribute")
+                            return make_response(put_response, 200)
         else:
             abort(404)
