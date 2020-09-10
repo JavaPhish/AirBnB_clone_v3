@@ -65,7 +65,7 @@ def post_user():
                 new_user = User()
                 setattr(new_user, key, value)
                 new_user.save()
-                return make_response(new_user.to_dict(), 201)
+                return make_response(jsonify(new_user.to_dict()), 201)
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False,
@@ -85,7 +85,7 @@ def put_user(user_id):
                 if k not in ignore_keys and hasattr(User, k):
                     setattr(value, k, v)
                     value.save()
-                    return make_response(value.to_dict(), 200)
+                    return make_response(jsonify(value.to_dict()), 200)
                 else:
                     return abort(404)
     return abort(404)
