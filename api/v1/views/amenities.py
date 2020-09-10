@@ -27,4 +27,4 @@ def one_amenity(amenity_id):
         if amenity_obj is not None:
             return make_response(jsonify(amenity_obj.to_dict()))
         else:
-            abort(404)
+            return abort(404)
