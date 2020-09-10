@@ -93,21 +93,20 @@ def post_place(city_id):
 def put_place(place_id):
     """Update place
     """
+    ignore_keys = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
     selected_place = storage.get(Place, place_id)
     if selected_place is not None:
         if request.method == 'PUT':
-            ignore_keys = [
-                'id', 'user_id', 'city_id', 'created_at', 'updated_at']
-            if request.get_json():
-                for name, value in request.get_json().items():
-                    if name not in ignore_keys:
-                        if hasattr(selected_place, name):
-                            setattr(selected_place, name, value)
-                            selected_place.save()
-                            put_response = jsonify(selected_place.to_dict())
-                            return make_response(put_response, 200)
-            else:
-                error_message = jsonify(error="Not a JSON")
-                return make_response(error_message, 400)
+            data = request.get_json()
+
+            if data is None:
+                return make_response(jsonify(error="Not a JSON"), 400)
+
+            for name, value in data.items():
+                if name not in ignore_keys and hasattr(selected_place, name):
+                    setattr(selected_place, name, value)
+                    selected_place.save()
+                    put_response = jsonify(selected_place.to_dict())
+                    return make_response(put_response, 200)
     else:
         abort(404)
