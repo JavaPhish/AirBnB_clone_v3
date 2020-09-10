@@ -96,8 +96,8 @@ def post_place(city_id):
             new_place.city_id = city_id
             new_place.save()
             return make_response(jsonify(new_place.to_dict()), 201)
-    else:
-        abort(404)
+
+    abort(404)
 
 
 @app_views.route("/places/<place_id>", strict_slashes=False,
