@@ -96,7 +96,7 @@ def put_place_review(review_id):
     """Update place
     """
     ignore_keys = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
-    selected_review = storage.get(Place, review_id)
+    selected_review = storage.get(Review, review_id)
     if selected_review is not None:
         if request.method == 'PUT':
             data = request.get_json()
