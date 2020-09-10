@@ -70,34 +70,32 @@ def delete_place(place_id):
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
                  methods=['POST'])
 def post_place(city_id):
-    """post place
-    """
+    """ post or create a new place in storage """
     selected_city = storage.get(City, city_id)
     if selected_city is not None:
-        if request.method == 'POST':
-            data = request.get_json()
-            if data is None:
-                return make_response(jsonify(error="Not a JSON"), 400)
+        data = request.get_json()
+        if data is None:
+            return make_response(jsonify(error="Not a JSON"), 400)
 
-            if 'user_id' not in data.keys():
-                return make_response(jsonify(error="Missing user_id"), 400)
+        if 'user_id' not in data.keys():
+            return make_response(jsonify(error="Missing user_id"), 400)
 
-            if 'name' not in data.keys():
-                return make_response(jsonify(error="Missing name"), 400)
+        if 'name' not in data.keys():
+            return make_response(jsonify(error="Missing name"), 400)
 
-            user_id = data.get('user_id')
-            get_user = storage.get(User, user_id)
-            if get_user is None:
-                abort(404)
+        user_id = data.get('user_id')
+        get_user = storage.get(User, user_id)
+        if get_user is None:
+            abort(404)
 
-            if 'user_id' and 'name' in data.keys():
-                new_place = Place()
-                for name, value in data.items():
-                    if hasattr(new_place, name):
-                        setattr(new_place, name, value)
-                new_place.city_id = city_id
-                new_place.save()
-                return make_response(jsonify(new_place.to_dict()), 201)
+        if 'user_id' and 'name' in data.keys():
+            new_place = Place()
+            for name, value in data.items():
+                if hasattr(new_place, name):
+                    setattr(new_place, name, value)
+            new_place.city_id = city_id
+            new_place.save()
+            return make_response(jsonify(new_place.to_dict()), 201)
     else:
         abort(404)
 
