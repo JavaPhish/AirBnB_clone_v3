@@ -23,8 +23,7 @@ def one_amenity(amenity_id):
     """get amenity by id
     """
     if request.method == 'GET':
-        amenity_obj = storage.get(Amenity, amenity_id)
-        if amenity_obj is not None:
-            return make_response(jsonify(amenity_obj.to_dict()))
-        else:
-            return abort(404)
+        for value in storage.all(Amenity).values():
+            if value.id == amenity_id:
+                return make_response(jsonify(value.to_dict()))
+        return abort(404)
