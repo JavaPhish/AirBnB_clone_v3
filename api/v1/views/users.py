@@ -53,6 +53,11 @@ def post_user():
 
     if 'name' not in data.keys():
         return make_response(jsonify(error="Missing name"), 400)
+    if 'email' not in data.keys():
+        return make_response(jsonify(error="Missing email"), 400)
+    if 'password' not in data.keys():
+        return make_response(jsonify(error="Missing password"), 400)
+
     ignore_keys = ['id', 'created_at', 'updated_at']
     for key, value in data.items():
         if key not in ignore_keys and hasattr(User, key):
@@ -60,7 +65,7 @@ def post_user():
                 new_user = User()
                 setattr(new_user, key, value)
                 new_user.save()
-                return make_response(new_user.to_dict(), 200)
+                return make_response(new_user.to_dict(), 201)
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False,
