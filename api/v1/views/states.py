@@ -78,18 +78,17 @@ def put_state(state_id):
             return make_response(error_message, 400)
 
         selected_state = storage.get(State, state_id)
-        if selected_state is not None:
+        if data is not None:
             ignore_keys = ['id', 'created_at', 'updated_at']
-            if data is not None:
+            if request.get_json():
                 for name, value in request.get_json().items():
                     if name not in ignore_keys:
-                        try:
+                        if hasattr(selected_state, name):
                             setattr(selected_state, name, value)
                             selected_state.save()
                             put_response = jsonify(selected_state.to_dict())
                             return make_response(put_response, 200)
-                        except Exception:
-                            put_response = jsonify(error="Not an attribute")
-                            return make_response(put_response, 200)
+                        else:
+                            abort(404)
         else:
             abort(404)
