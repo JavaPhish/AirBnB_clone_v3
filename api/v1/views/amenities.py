@@ -70,14 +70,16 @@ def put_amenites(amenity_id):
     if request.method == 'PUT':
         try:
             data = request.get_json()
+            ignore_keys = ['id', 'created_at', 'updated_at']
+            for value in storage.all(Amenity).values():
+                if value.id == amenity_id:
+                    for k, v in data.items():
+                        if k not in ignore_keys and hasattr(Amenity, k):
+                            setattr(value, k, v)
+                            value.save()
+                            return make_response(value.to_dict(), 200)
+                        else:
+                            return abort(404)
+            return abort(404)
         except Exception:
             return make_response(jsonify(error="Not a JSON"), 400)
-        ignore_keys = ['id', 'created_at', 'updated_at']
-        for value in storage.all(Amenity).values():
-            if value.id == amenity_id:
-                for k, v in data.items():
-                    if k not in ignore_keys and hasattr(Amenity, k):
-                        setattr(value, k, v)
-                        value.save()
-                        return make_response(value.to_dict(), 200)
-        return abort(404)
