@@ -76,7 +76,7 @@ def put_user(user_id):
     if data is None:
         return make_response(jsonify(error="Not a JSON"), 400)
 
-    ignore_keys = ['id', 'created_at', 'updated_at']
+    ignore_keys = ['id', 'email', 'created_at', 'updated_at']
     for value in storage.all(User).values():
         if value.id == user_id:
             for k, v in data.items():
