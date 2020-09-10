@@ -74,13 +74,14 @@ def post_place(city_id):
                 if 'name' not in request.get_json().keys():
                     error_message = jsonify(error="Missing name")
                     return make_response(error_message, 400)
-                new_place_instance = Place()
-                new_place_instance.city_id = city_id
-                new_place_instance.user_id = user_id
-                new_place_instance.name = request.get_json().get('name')
-                new_place_instance.save()
-                new_ins_res = jsonify(new_place_instance.to_dict())
-                return make_response(new_ins_res, 201)
+                if 'name' in request.get_json().keys():
+                    new_place_instance = Place()
+                    new_place_instance.city_id = city_id
+                    new_place_instance.user_id = user_id
+                    new_place_instance.name = request.get_json().get('name')
+                    new_place_instance.save()
+                    new_ins_res = jsonify(new_place_instance.to_dict())
+                    return make_response(new_ins_res, 201)
             else:
                 error_message = jsonify(error="Not a JSON")
                 return make_response(error_message, 400)
