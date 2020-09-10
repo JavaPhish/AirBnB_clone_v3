@@ -27,3 +27,16 @@ def one_amenity(amenity_id):
             if value.id == amenity_id:
                 return make_response(jsonify(value.to_dict()))
         return abort(404)
+
+
+@app_views.route('/amenities/<amenity_id>', methods=['DELETE'])
+def delete_amenity(amenity_id):
+    """delete amenity by id
+    """
+    if request.method == 'DELETE':
+        for value in storage.all(Amenity).values():
+            if value.id == amenity_id:
+                value.delete()
+                storage.save()
+                return make_response(jsonify({}), 200)
+        return abort(404)
