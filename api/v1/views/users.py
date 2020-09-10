@@ -87,6 +87,7 @@ def post_user():
     new_user.email = data.get('email')
     new_user.password = data.get('password')
     new_user.save()
+
     return make_response(jsonify(new_user.to_dict()), 201)
 
 
@@ -97,10 +98,14 @@ def put_user(user_id):
     """
 
     data = request.get_json()
+    """ Validate json bs, or yell at user for sending bad data """
     if data is None:
         return make_response(jsonify(error="Not a JSON"), 400)
 
+    """ ignore keys, holberton wanted this """
     ignore_keys = ['id', 'email', 'created_at', 'updated_at']
+
+    """ Find the matching user, and update it accordingly """
     for value in storage.all(User).values():
         if value.id == user_id:
             for k, v in data.items():
@@ -110,4 +115,5 @@ def put_user(user_id):
                     return make_response(jsonify(value.to_dict()), 200)
                 else:
                     return abort(404)
+    """ if we made it here, somethings wack and we didnt find it """
     return abort(404)
