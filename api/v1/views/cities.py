@@ -69,6 +69,6 @@ def city_id(city_id):
                             return make_response(put_response, 200)
             else:
                 error_message = jsonify(error="Not a JSON")
-                return make_response(error_message, 400)
+                return make_response(error_message, 400
     else:
         abort(404)
