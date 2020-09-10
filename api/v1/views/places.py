@@ -21,7 +21,7 @@ def all_places_in_city(city_id):
             for v in storage.all(Place).values():
                 if v.city_id == city_id:
                     json_repr.append(v.to_dict())
-            return make_response(jsonify(json_repr), 200)
+            return make_response(jsonify(json_repr))
     else:
         abort(404)
 
@@ -104,7 +104,6 @@ def put_place(place_id):
                         if hasattr(selected_place, name):
                             setattr(selected_place, name, value)
                             selected_place.save()
-                            storage.save()
                             put_response = jsonify(selected_place.to_dict())
                             return make_response(put_response, 200)
             else:
