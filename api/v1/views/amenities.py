@@ -4,7 +4,7 @@ from models import storage
 from models.amenity import Amenity
 
 
-@app_views.route('/amenities')
+@app_views.route('/amenities/')
 def all_amenites():
     """list all amenites
     """
