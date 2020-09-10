@@ -73,21 +73,29 @@ def post_place(city_id):
     """ post or create a new place in storage """
     selected_city = storage.get(City, city_id)
     if selected_city is not None:
+
+        """ Ensure the json is valid (or exists to begin with) """
         data = request.get_json()
         if data is None:
             return make_response(jsonify(error="Not a JSON"), 400)
 
+        """ The next 2 if statements validate that required keys are present """
         if 'user_id' not in data.keys():
             return make_response(jsonify(error="Missing user_id"), 400)
 
         if 'name' not in data.keys():
             return make_response(jsonify(error="Missing name"), 400)
 
+        """ Get the user, if it returns none, it doesnt exist (Return 404) """
         user_id = data.get('user_id')
         get_user = storage.get(User, user_id)
         if get_user is None:
             abort(404)
 
+        """ if all data is present, create the new place
+            object, fill in data and tell the storage engine
+            to update (via .save(), return 201 on success
+        """
         if 'user_id' and 'name' in data.keys():
             new_place = Place()
             for name, value in data.items():
@@ -97,6 +105,7 @@ def post_place(city_id):
             new_place.save()
             return make_response(jsonify(new_place.to_dict()), 201)
 
+    """ If we made it here, it couldnt be found (so 404) """
     abort(404)
 
 
