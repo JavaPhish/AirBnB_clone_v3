@@ -42,6 +42,7 @@ def get_place(place_id):
             and respond with it
         """
         return make_response(jsonify(selected_place.to_dict()))
+    """ if we made it here, no relevent data was found, return 404 """
     abort(404)
 
 
