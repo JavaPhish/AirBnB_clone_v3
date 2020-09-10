@@ -23,7 +23,7 @@ def post_state():
     """Post or make new states
     """
     if request.method == 'POST':
-        if request.is_json:
+        try:
             if 'name' in request.get_json().keys():
                 new_state_instance = State()
                 new_state_instance.name = request.get_json().get('name')
@@ -33,7 +33,7 @@ def post_state():
             else:
                 error_message = jsonify(error="Missing name")
                 return make_response(error_message, 400)
-        else:
+        except Exception as e:
             error_message = jsonify(error="Not a JSON")
             return make_response(error_message, 400)
 
@@ -59,7 +59,8 @@ def delete_state(state_id):
         if selected_state is not None:
             selected_state.delete()
             storage.save()
-            return make_response(jsonify({}), 200)
+            empty_dict = {}
+            return make_response(jsonify(empty_dict), 200)
         else:
             abort(404)
 
@@ -70,7 +71,7 @@ def put_state(state_id):
         selected_state = storage.get(State, state_id)
         if selected_state is not None:
             ignore_keys = ['id', 'created_at', 'updated_at']
-            if request.is_json:
+            try:
                 for name, value in request.get_json().items():
                     if name not in ignore_keys:
                         if hasattr(selected_state, name):
@@ -78,7 +79,10 @@ def put_state(state_id):
                             selected_state.save()
                             put_response = jsonify(selected_state.to_dict())
                             return make_response(put_response, 200)
-            else:
+                        else:
+                            error_message = jsonify(error="Not a JSON")
+                            return make_response(error_message, 400)
+            except Exception as e:
                 error_message = jsonify(error="Not a JSON")
                 return make_response(error_message, 400)
         else:
