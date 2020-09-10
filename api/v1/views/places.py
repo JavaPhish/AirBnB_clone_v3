@@ -53,10 +53,9 @@ def delete_place(place_id):
     """
     selected_place = storage.get(Place, place_id)
     if selected_place is not None:
-        if request.method == 'DELETE':
-            selected_place.delete()
-            storage.save()
-            return make_response(jsonify({}), 200)
+        selected_place.delete()
+        storage.save()
+        return make_response(jsonify({}), 200)
     else:
         abort(404)
 
