@@ -23,9 +23,8 @@ def post_state():
     """Post or make new states
     """
     if request.method == 'POST':
-        try:
-            data = request.get_json()
-        except Exception:
+        data = request.get_json()
+        if data is None:
             error_message = jsonify(error="Not a JSON")
             return make_response(error_message, 400)
 
@@ -63,8 +62,7 @@ def delete_state(state_id):
         if selected_state is not None:
             selected_state.delete()
             storage.save()
-            empty_dict = {}
-            return make_response(jsonify(empty_dict), 200)
+            return make_response(jsonify({}), 200)
         else:
             abort(404)
 
