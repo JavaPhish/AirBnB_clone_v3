@@ -63,15 +63,26 @@ def delete_user(user_id):
 def post_user():
     """post new user data
     """
+
     data = request.get_json()
+    """ Validates the json is valid """
     if data is None:
         return make_response(jsonify(error="Not a JSON"), 400)
 
+    """ Ensures we have the relevent keys (email and password)
+        if we dont have them, yell at the user
+    """
     if 'email' not in data.keys():
         return make_response(jsonify(error="Missing email"), 400)
     if 'password' not in data.keys():
         return make_response(jsonify(error="Missing password"), 400)
 
+    """ Create a new user and use the given data (email and pass)
+        as the values for the new users.
+
+        .save() so the storage engine will update these changes
+        then return 201 on success
+    """
     new_user = User()
     new_user.email = data.get('email')
     new_user.password = data.get('password')
