@@ -31,12 +31,12 @@ def all_places_in_city(city_id):
 def get_place(place_id):
     """get place by id
     """
-    if request.method == 'GET':
-        selected_place = storage.get(Place, place_id)
-        if selected_place is not None:
-            return jsonify(selected_place.to_dict())
-        else:
-            abort(404)
+    selected_place = storage.get(Place, place_id)
+    if selected_place is not None:
+        if request.method == 'GET':
+            return make_response(jsonify(selected_place.to_dict()))
+    else:
+        abort(404)
 
 
 @app_views.route('/places/<place_id>', strict_slashes=False,
