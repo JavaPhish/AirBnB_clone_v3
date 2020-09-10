@@ -41,12 +41,11 @@ def post_state():
 def one_state(state_id):
     """get one state by id
     """
-    if request.method == 'GET':
-        selected_state = storage.get(State, state_id)
-        if selected_state is not None:
-            return jsonify(selected_state.to_dict())
-        else:
-            abort(404)
+    selected_state = storage.get(State, state_id)
+    if selected_state is not None:
+        return jsonify(selected_state.to_dict())
+    else:
+        abort(404)
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False,
