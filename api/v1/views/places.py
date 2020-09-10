@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""import app_views City views
+"""import app_views Places views
 """
 from api.v1.views import app_views
 from flask import jsonify, abort, request, make_response
@@ -79,9 +79,10 @@ def post_place(city_id):
 
             if 'user_id' and 'name' in data.keys():
                 new_place = Place()
+                for name, value in data.items():
+                    if hasattr(new_place, name):
+                        setattr(new_place, name, value)
                 new_place.city_id = city_id
-                new_place.user_id = user_id
-                new_place.name = request.get_json().get('name')
                 new_place.save()
                 return make_response(jsonify(new_place.to_dict()), 201)
     else:
