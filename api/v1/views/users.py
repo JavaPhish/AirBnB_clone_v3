@@ -40,11 +40,21 @@ def one_user(user_id):
 def delete_user(user_id):
     """delete user by id
     """
+
+    """ Loop through all Users in the storage engine,
+        once we find one that matches the given id (user_id),
+        delete it from the engine and .save() the engine to
+        update our changes
+
+        oh then return 200 to reflect a successful deletion
+    """
     for value in storage.all(User).values():
         if value.id == user_id:
             value.delete()
             storage.save()
             return make_response(jsonify({}), 200)
+
+    """ 404 abort if we made it here, nothing was found to delete """
     return abort(404)
 
 
