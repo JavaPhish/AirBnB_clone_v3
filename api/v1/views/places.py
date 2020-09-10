@@ -39,8 +39,7 @@ def get_place(place_id):
     selected_place = storage.get(Place, place_id)
     if selected_place is not None:
         return make_response(jsonify(selected_place.to_dict()))
-    else:
-        abort(404)
+    abort(404)
 
 
 @app_views.route('/places/<place_id>', strict_slashes=False,
