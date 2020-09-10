@@ -112,8 +112,8 @@ def post_place(city_id):
 @app_views.route("/places/<place_id>", strict_slashes=False,
                  methods=['PUT'])
 def put_place(place_id):
-    """Update place
-    """
+    """ Update place """
+    """ Holberton wants this """
     ignore_keys = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
     selected_place = storage.get(Place, place_id)
     if selected_place is not None:
