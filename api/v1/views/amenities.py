@@ -12,11 +12,10 @@ from models.amenity import Amenity
 def all_amenites():
     """list all amenites
     """
-    if request.method == 'GET':
-        all_amenites = []
-        for amenity in storage.all(Amenity).values():
-            all_amenites.append(amenity.to_dict())
-        return make_response(jsonify(all_amenites))
+    all_amenites = []
+    for amenity in storage.all(Amenity).values():
+        all_amenites.append(amenity.to_dict())
+    return make_response(jsonify(all_amenites))
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
