@@ -23,11 +23,10 @@ def all_amenites():
 def one_amenity(amenity_id):
     """get amenity by id
     """
-    if request.method == 'GET':
-        for value in storage.all(Amenity).values():
-            if value.id == amenity_id:
-                return make_response(jsonify(value.to_dict()))
-        return abort(404)
+    for value in storage.all(Amenity).values():
+        if value.id == amenity_id:
+            return make_response(jsonify(value.to_dict()))
+    return abort(404)
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
