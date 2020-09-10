@@ -65,7 +65,7 @@ def post_amenites():
                     new_amenity = Amenity()
                     setattr(new_amenity, key, value)
                     new_amenity.save()
-                    return make_response(jsonify(new_amenity.to_dict()), 200)
+                    return make_response(jsonify(new_amenity.to_dict()), 201)
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
