@@ -57,12 +57,11 @@ def post_user():
         return make_response(jsonify(error="Missing password"), 400)
 
     for key, value in data.items():
-        if key not in ignore_keys and hasattr(User, key):
-            if key == 'email':
-                new_user = User()
-                setattr(new_user, key, value)
-                new_user.save()
-                return make_response(jsonify(new_user.to_dict()), 201)
+        if key == 'email' or key == 'password':
+            new_user = User()
+            setattr(new_user, key, value)
+            new_user.save()
+            return make_response(jsonify(new_user.to_dict()), 201)
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False,
