@@ -53,14 +53,13 @@ def one_state(state_id):
 def delete_state(state_id):
     """delete state by id
     """
-    if request.method == 'DELETE':
-        selected_state = storage.get(State, state_id)
-        if selected_state is not None:
-            selected_state.delete()
-            storage.save()
-            return make_response(jsonify({}), 200)
-        else:
-            abort(404)
+    selected_state = storage.get(State, state_id)
+    if selected_state is not None:
+        selected_state.delete()
+        storage.save()
+        return make_response(jsonify({}), 200)
+    else:
+        abort(404)
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False, methods=['PUT'])
