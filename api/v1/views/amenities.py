@@ -61,3 +61,22 @@ def post_amenites():
                         return make_response(new_amenity.to_dict(), 200)
         except Exception:
             return make_response(jsonify(error="Not a JSON"), 400)
+
+
+@app_views.route('/amenities/<amenity_id>', methods=['PUT'])
+def put_amenites(amenity_id):
+    """update amenity instance
+    """
+    if request.method == 'PUT':
+        try:
+            data = request.get_json()
+            ignore_keys = ['id', 'created_at', 'updated_at']
+            for value in storage.all(Amenity).values():
+                if value.id == amenity_id:
+                    for k, v in data.items():
+                        if k not in ignore_keys and hasattr(Amenity, k):
+                            setattr(value, k, v)
+                            value.save()
+                            return make_response(value.to_dict(), 200)
+        except Exception:
+            return make_response(jsonify(error="Not a JSON"), 400)
