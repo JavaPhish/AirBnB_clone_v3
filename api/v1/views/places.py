@@ -44,14 +44,14 @@ def get_place(place_id):
 def delete_place(place_id):
     """delete state by id
     """
-    if request.method == 'DELETE':
-        selected_place = storage.get(Place, place_id)
-        if selected_place is not None:
+    selected_place = storage.get(Place, place_id)
+    if selected_place is not None:
+        if request.method == 'DELETE':
             selected_place.delete()
             storage.save()
             return make_response(jsonify({}), 200)
-        else:
-            abort(404)
+    else:
+        abort(404)
 
 
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
@@ -63,25 +63,26 @@ def post_place(city_id):
     if selected_city is not None:
         if request.method == 'POST':
             if request.get_json():
-                if 'user_id' not in request.get_json().keys():
-                    error_message = jsonify(error="Missing user_id")
-                    return make_response(error_message, 400)
+                if 'name' in request.get_json().keys():
+                    if 'user_id' in request.get_json().keys():
+                        user_id = request.get_json().get('user_id')
+                        get_user = storage.get(User, user_id)
+                        if get_user is not None:
+                            new_place = Place()
+                            new_place.city_id = city_id
+                            new_place.user_id = user_id
+                            new_place.name = request.get_json().get('name')
+                            new_place.save()
+                            new_ins_res = jsonify(new_place.to_dict())
+                            return make_response(new_ins_res, 201)
+                        else:
+                            abort(404)
+                    else:
+                        error_message = jsonify(error="Missing user_id")
+                        return make_response(error_message, 400)
                 else:
-                    user_id = request.get_json().get('user_id')
-                    get_user = storage.get(User, user_id)
-                    if get_user is None:
-                        abort(404)
-                if 'name' not in request.get_json().keys():
                     error_message = jsonify(error="Missing name")
                     return make_response(error_message, 400)
-                if 'name' in request.get_json().keys():
-                    new_place_instance = Place()
-                    new_place_instance.city_id = city_id
-                    new_place_instance.user_id = user_id
-                    new_place_instance.name = request.get_json().get('name')
-                    new_place_instance.save()
-                    new_ins_res = jsonify(new_place_instance.to_dict())
-                    return make_response(new_ins_res, 201)
             else:
                 error_message = jsonify(error="Not a JSON")
                 return make_response(error_message, 400)
