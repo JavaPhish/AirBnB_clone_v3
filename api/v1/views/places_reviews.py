@@ -42,7 +42,7 @@ def get_place_reviews(review_id):
 
 @app_views.route('/reviews/<review_id>', strict_slashes=False,
                  methods=['DELETE'])
-def delete_place(review_id):
+def delete_place_review(review_id):
     """delete state by id
     """
     selected_review = storage.get(Review, review_id)
@@ -57,7 +57,7 @@ def delete_place(review_id):
 
 @app_views.route("/places/<place_id>/reviews", strict_slashes=False,
                  methods=['POST'])
-def post_review(place_id):
+def post_place_review(place_id):
     """post place
     """
     selected_place = storage.get(Place, place_id)
@@ -92,7 +92,7 @@ def post_review(place_id):
 
 @app_views.route("/reviews/<review_id>", strict_slashes=False,
                  methods=['PUT'])
-def put_place(review_id):
+def put_place_review(review_id):
     """Update place
     """
     ignore_keys = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
