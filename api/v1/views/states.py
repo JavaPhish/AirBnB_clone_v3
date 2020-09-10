@@ -79,9 +79,6 @@ def put_state(state_id):
                             selected_state.save()
                             put_response = jsonify(selected_state.to_dict())
                             return make_response(put_response, 200)
-                        else:
-                            error_message = jsonify(error="Not a JSON")
-                            return make_response(error_message, 400)
             except Exception as e:
                 error_message = jsonify(error="Not a JSON")
                 return make_response(error_message, 400)
