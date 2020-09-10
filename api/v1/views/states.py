@@ -21,21 +21,20 @@ def all_states():
 def post_state():
     """Post or make new states
     """
-    if request.method == 'POST':
-        data = request.get_json()
-        if data is None:
-            error_message = jsonify(error="Not a JSON")
-            return make_response(error_message, 400)
+    data = request.get_json()
+    if data is None:
+        error_message = jsonify(error="Not a JSON")
+        return make_response(error_message, 400)
 
-        if 'name' in request.get_json().keys():
-            new_state_instance = State()
-            new_state_instance.name = request.get_json().get('name')
-            new_state_instance.save()
-            post_response = jsonify(new_state_instance.to_dict())
-            return make_response(post_response, 201)
-        else:
-            error_message = jsonify(error="Missing name")
-            return make_response(error_message, 400)
+    if 'name' in request.get_json().keys():
+        new_state_instance = State()
+        new_state_instance.name = request.get_json().get('name')
+        new_state_instance.save()
+        post_response = jsonify(new_state_instance.to_dict())
+        return make_response(post_response, 201)
+    else:
+        error_message = jsonify(error="Missing name")
+        return make_response(error_message, 400)
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False, methods=['GET'])
