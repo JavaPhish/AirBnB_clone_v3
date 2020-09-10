@@ -8,7 +8,8 @@ from models.state import State
 from models.city import City
 
 
-@app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'])
+@app_views.route('/states/<state_id>/cities', strict_slashes=False,
+                 methods=['GET', 'POST'])
 def cities(state_id):
     """get city instance
     and post new city instance
@@ -40,7 +41,8 @@ def cities(state_id):
         abort(404)
 
 
-@app_views.route('/cities/<city_id>', methods=['GET', 'DELETE', 'PUT'])
+@app_views.route('/cities/<city_id>', strict_slashes=False,
+                 methods=['GET', 'DELETE', 'PUT'])
 def city_id(city_id):
     """get city by id
     delete by id
