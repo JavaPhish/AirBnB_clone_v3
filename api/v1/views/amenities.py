@@ -51,20 +51,21 @@ def post_amenites():
     """post new amenities
     """
     if request.method == 'POST':
-        try:
-            data = request.get_json()
-            if 'name' not in data.keys():
-                return make_response(jsonify(error="Missing name"), 400)
-            ignore_keys = ['id', 'created_at', 'updated_at']
-            for key, value in data.items():
-                if key not in ignore_keys and hasattr(Amenity, key):
-                    if key == 'name':
-                        new_amenity = Amenity()
-                        setattr(new_amenity, key, value)
-                        new_amenity.save()
-                        return make_response(new_amenity.to_dict(), 200)
-        except Exception:
+
+        data = request.get_json()
+        if data is None:
             return make_response(jsonify(error="Not a JSON"), 400)
+
+        if 'name' not in data.keys():
+            return make_response(jsonify(error="Missing name"), 400)
+        ignore_keys = ['id', 'created_at', 'updated_at']
+        for key, value in data.items():
+            if key not in ignore_keys and hasattr(Amenity, key):
+                if key == 'name':
+                    new_amenity = Amenity()
+                    setattr(new_amenity, key, value)
+                    new_amenity.save()
+                    return make_response(new_amenity.to_dict(), 200)
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
@@ -73,18 +74,18 @@ def put_amenites(amenity_id):
     """update amenity instance
     """
     if request.method == 'PUT':
-        try:
-            data = request.get_json()
-            ignore_keys = ['id', 'created_at', 'updated_at']
-            for value in storage.all(Amenity).values():
-                if value.id == amenity_id:
-                    for k, v in data.items():
-                        if k not in ignore_keys and hasattr(Amenity, k):
-                            setattr(value, k, v)
-                            value.save()
-                            return make_response(value.to_dict(), 200)
-                        else:
-                            return abort(404)
-            return abort(404)
-        except Exception:
+        data = request.get_json()
+        if data is None:
             return make_response(jsonify(error="Not a JSON"), 400)
+
+        ignore_keys = ['id', 'created_at', 'updated_at']
+        for value in storage.all(Amenity).values():
+            if value.id == amenity_id:
+                for k, v in data.items():
+                    if k not in ignore_keys and hasattr(Amenity, k):
+                        setattr(value, k, v)
+                        value.save()
+                        return make_response(value.to_dict(), 200)
+                    else:
+                        return abort(404)
+        return abort(404)
