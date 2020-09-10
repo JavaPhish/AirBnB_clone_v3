@@ -34,13 +34,12 @@ def one_amenity(amenity_id):
 def delete_amenity(amenity_id):
     """delete amenity by id
     """
-    if request.method == 'DELETE':
-        for value in storage.all(Amenity).values():
-            if value.id == amenity_id:
-                value.delete()
-                storage.save()
-                return make_response(jsonify({}), 200)
-        return abort(404)
+    for value in storage.all(Amenity).values():
+        if value.id == amenity_id:
+            value.delete()
+            storage.save()
+            return make_response(jsonify({}), 200)
+    return abort(404)
 
 
 @app_views.route('/amenities/', strict_slashes=False,
