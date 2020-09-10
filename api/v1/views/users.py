@@ -56,7 +56,6 @@ def post_user():
     if 'password' not in data.keys():
         return make_response(jsonify(error="Missing password"), 400)
 
-    ignore_keys = ['id', 'email', 'created_at', 'updated_at']
     for key, value in data.items():
         if key not in ignore_keys and hasattr(User, key):
             if key == 'name':
