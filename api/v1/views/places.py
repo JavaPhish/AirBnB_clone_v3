@@ -53,10 +53,17 @@ def delete_place(place_id):
     """
     selected_place = storage.get(Place, place_id)
     if selected_place is not None:
+        """ If we found data, delete it within storage
+            then tell storage to update the changes.
+            After that, return a 200 indicating it worked
+        """
         selected_place.delete()
         storage.save()
         return make_response(jsonify({}), 200)
 
+    """ Only reaches here if nothing was found (So 404
+        to make the user feel inferior
+    """
     abort(404)
 
 
