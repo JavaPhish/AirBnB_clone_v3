@@ -58,7 +58,7 @@ def post_user():
 
     for key, value in data.items():
         if key not in ignore_keys and hasattr(User, key):
-            if key == 'name':
+            if key == 'email':
                 new_user = User()
                 setattr(new_user, key, value)
                 new_user.save()
