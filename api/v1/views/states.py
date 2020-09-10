@@ -7,7 +7,7 @@ from models import storage
 from models.state import State
 
 
-@app_views.route('/states/', methods=['GET'])
+@app_views.route('/states/', strict_slashes=False, methods=['GET'])
 def all_states():
     """get all state instance json format
     """
@@ -18,7 +18,7 @@ def all_states():
         return make_response(jsonify(json_repr))
 
 
-@app_views.route('/states/', methods=['POST'])
+@app_views.route('/states/', strict_slashes=False, methods=['POST'])
 def post_state():
     """Post or make new states
     """
@@ -41,7 +41,7 @@ def post_state():
                 return make_response(error_message, 400)
 
 
-@app_views.route('/states/<state_id>', methods=['GET'])
+@app_views.route('/states/<state_id>', strict_slashes=False, methods=['GET'])
 def one_state(state_id):
     """get one state by id
     """
@@ -53,7 +53,7 @@ def one_state(state_id):
             abort(404)
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'])
+@app_views.route('/states/<state_id>', strict_slashes=False, methods=['DELETE'])
 def delete_state(state_id):
     """delete state by id
     """
@@ -68,7 +68,7 @@ def delete_state(state_id):
             abort(404)
 
 
-@app_views.route('/states/<state_id>', methods=['PUT'])
+@app_views.route('/states/<state_id>', strict_slashes=False, methods=['PUT'])
 def put_state(state_id):
     if request.method == 'PUT':
         try:
