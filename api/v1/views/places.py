@@ -62,30 +62,28 @@ def post_place(city_id):
     selected_city = storage.get(City, city_id)
     if selected_city is not None:
         if request.method == 'POST':
-            if request.get_json():
-                if 'name' in request.get_json().keys():
-                    if 'user_id' in request.get_json().keys():
-                        user_id = request.get_json().get('user_id')
-                        get_user = storage.get(User, user_id)
-                        if get_user is not None:
-                            new_place = Place()
-                            new_place.city_id = city_id
-                            new_place.user_id = user_id
-                            new_place.name = request.get_json().get('name')
-                            new_place.save()
-                            new_ins_res = jsonify(new_place.to_dict())
-                            return make_response(new_ins_res, 201)
-                        else:
-                            abort(404)
-                    else:
-                        error_message = jsonify(error="Missing user_id")
-                        return make_response(error_message, 400)
-                else:
-                    error_message = jsonify(error="Missing name")
-                    return make_response(error_message, 400)
-            else:
-                error_message = jsonify(error="Not a JSON")
-                return make_response(error_message, 400)
+            data = request.get_json()
+            if data is None:
+                return make_response(jsonify(error="Not a JSON"), 400)
+
+            if 'user_id' not in data.keys():
+                return make_response(jsonify(error="Missing user_id"), 400)
+
+            if 'name' not in data.keys():
+                return make_response(jsonify(error="Missing name"), 400)
+
+            user_id = data.get('user_id')
+            get_user = storage.get(User, user_id)
+            if get_user is None:
+                abort(404)
+
+            if 'user_id' and 'name' in data.keys():
+                new_place = Place()
+                new_place.city_id = city_id
+                new_place.user_id = user_id
+                new_place.name = request.get_json().get('name')
+                new_place.save()
+                return make_response(jsonify(new_place.to_dict()), 201)
     else:
         abort(404)
 
