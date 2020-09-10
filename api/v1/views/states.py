@@ -13,7 +13,7 @@ def all_states():
     """
     if request.method == 'GET':
         json_repr = []
-        for v in storage.all(State).values():
+        for v in storage.all("State").values():
             json_repr.append(v.to_dict())
         return make_response(jsonify(json_repr))
 
