@@ -28,8 +28,7 @@ def all_places_in_city(city_id):
                 json_repr.append(v.to_dict())
         """ JSON the output then respond """
         return make_response(jsonify(json_repr))
-    else:
-        abort(404)
+    abort(404)
 
 
 @app_views.route("/places/<place_id>", strict_slashes=False,
