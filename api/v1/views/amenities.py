@@ -40,3 +40,24 @@ def delete_amenity(amenity_id):
                 storage.save()
                 return make_response(jsonify({}), 200)
         return abort(404)
+
+
+@app_views.route('/amenities/', methods=['POST'])
+def post_amenites():
+    """post new amenities
+    """
+    if request.method == 'POST':
+        try:
+            data = request.get_json()
+            if 'name' not in data.keys():
+                return make_response(jsonify(error="Missing name"), 400)
+            ignore_keys = ['id', 'created_at', 'updated_at']
+            for key, value in data.items():
+                if key not in ignore_keys and hasattr(Amenity, key):
+                    if key == 'name':
+                        new_amenity = Amenity()
+                        setattr(new_amenity, key, value)
+                        new_amenity.save()
+                        return make_response(new_amenity.to_dict(), 200)
+        except Exception:
+            return make_response(jsonify(error="Not a JSON"), 400)
