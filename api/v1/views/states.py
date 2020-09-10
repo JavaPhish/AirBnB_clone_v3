@@ -11,11 +11,10 @@ from models.state import State
 def all_states():
     """get all state instance json format
     """
-    if request.method == 'GET':
-        json_repr = []
-        for v in storage.all(State).values():
-            json_repr.append(v.to_dict())
-        return make_response(jsonify(json_repr))
+    json_repr = []
+    for v in storage.all(State).values():
+        json_repr.append(v.to_dict())
+    return make_response(jsonify(json_repr))
 
 
 @app_views.route('/states/', strict_slashes=False, methods=['POST'])
