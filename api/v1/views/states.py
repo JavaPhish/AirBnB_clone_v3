@@ -28,16 +28,15 @@ def post_state():
             error_message = jsonify(error="Not a JSON")
             return make_response(error_message, 400)
 
-        if data is not None:
-            if 'name' in request.get_json().keys():
-                new_state_instance = State()
-                new_state_instance.name = request.get_json().get('name')
-                new_state_instance.save()
-                post_response = jsonify(new_state_instance.to_dict())
-                return make_response(post_response, 201)
-            else:
-                error_message = jsonify(error="Missing name")
-                return make_response(error_message, 400)
+        if 'name' in request.get_json().keys():
+            new_state_instance = State()
+            new_state_instance.name = request.get_json().get('name')
+            new_state_instance.save()
+            post_response = jsonify(new_state_instance.to_dict())
+            return make_response(post_response, 201)
+        else:
+            error_message = jsonify(error="Missing name")
+            return make_response(error_message, 400)
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False, methods=['GET'])
@@ -70,9 +69,8 @@ def delete_state(state_id):
 @app_views.route('/states/<state_id>', strict_slashes=False, methods=['PUT'])
 def put_state(state_id):
     if request.method == 'PUT':
-        try:
-            data = request.get_json()
-        except Exception:
+        data = request.get_json()
+        if data is None:
             error_message = jsonify(error="Not a JSON")
             return make_response(error_message, 400)
 
