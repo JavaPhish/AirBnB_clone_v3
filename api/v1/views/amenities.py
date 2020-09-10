@@ -78,8 +78,5 @@ def put_amenites(amenity_id):
                             setattr(value, k, v)
                             value.save()
                             return make_response(value.to_dict(), 200)
-                        else:
-                            return abort(404)
-            return abort(404)
         except Exception:
             return make_response(jsonify(error="Not a JSON"), 400)
