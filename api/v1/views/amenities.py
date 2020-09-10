@@ -65,7 +65,7 @@ def post_amenites():
                     new_amenity = Amenity()
                     setattr(new_amenity, key, value)
                     new_amenity.save()
-                    return make_response(new_amenity.to_dict(), 200)
+                    return make_response(jsonify(new_amenity.to_dict()), 200)
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
@@ -85,7 +85,7 @@ def put_amenites(amenity_id):
                     if k not in ignore_keys and hasattr(Amenity, k):
                         setattr(value, k, v)
                         value.save()
-                        return make_response(value.to_dict(), 200)
+                        return make_response(jsonify(value.to_dict()), 200)
                     else:
                         return abort(404)
         return abort(404)
