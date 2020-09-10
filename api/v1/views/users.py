@@ -24,8 +24,14 @@ def one_user(user_id):
     """get user by id
     """
     for value in storage.all(User).values():
+        """ Loop through all users in the storage engine,
+            when we find one with a matching id to the user_id,
+            return it in json format
+        """
         if value.id == user_id:
             return make_response(jsonify(value.to_dict()))
+
+    """ abort if nothing was found (404 OBVIOUSLY.) """
     return abort(404)
 
 
