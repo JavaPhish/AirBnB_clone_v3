@@ -38,7 +38,7 @@ def get_place(place_id):
     """
     selected_place = storage.get(Place, place_id)
     if selected_place is not None:
-        """ if the get actually returned a value, JSONIFY it 
+        """ if the get actually returned a value, JSONIFY it
             and respond with it
         """
         return make_response(jsonify(selected_place.to_dict()))
