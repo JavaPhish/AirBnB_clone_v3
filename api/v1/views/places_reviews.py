@@ -79,7 +79,7 @@ def post_place_review(place_id):
                 abort(404)
 
             if 'user_id' and 'text' in data.keys():
-                new_review = Place()
+                new_review = Review()
                 for name, value in data.items():
                     if hasattr(new_review, name):
                         setattr(new_review, name, value)
