@@ -113,20 +113,27 @@ def post_place(city_id):
                  methods=['PUT'])
 def put_place(place_id):
     """ Update place """
-    """ Holberton wants this """
+
+    """ Holberton wants this, but keys to ignore :) """
     ignore_keys = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
+
     selected_place = storage.get(Place, place_id)
     if selected_place is not None:
         data = request.get_json()
 
+        """ Validate were given actual usable data """
         if data is None:
             return make_response(jsonify(error="Not a JSON"), 400)
 
+        """ Find the matching place and update its attributes
+            to the new values. After updating, save() to 'commit' the
+            changes to the storage engine
+        """
         for name, value in data.items():
             if name not in ignore_keys and hasattr(selected_place, name):
                 setattr(selected_place, name, value)
                 selected_place.save()
                 put_response = jsonify(selected_place.to_dict())
                 return make_response(put_response, 200)
-
+    """ if we made it this far we couldnt find anything so 404 """
     abort(404)
