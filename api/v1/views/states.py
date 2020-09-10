@@ -13,7 +13,7 @@ def all_states():
     """
     if request.method == 'GET':
         json_repr = []
-        for v in storage.all("State").values():
+        for v in storage.all(State).values():
             json_repr.append(v.to_dict())
         return make_response(jsonify(json_repr))
 
@@ -48,7 +48,7 @@ def one_state(state_id):
     if request.method == 'GET':
         selected_state = storage.get(State, state_id)
         if selected_state is not None:
-            return make_response(jsonify(selected_state.to_dict()))
+            return jsonify(selected_state.to_dict())
         else:
             abort(404)
 
