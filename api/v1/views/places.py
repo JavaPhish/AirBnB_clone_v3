@@ -7,6 +7,7 @@ from models import storage
 from models.place import Place
 from models.city import City
 from models.user import User
+from models.state import State
 
 
 @app_views.route("/cities/<city_id>/places", strict_slashes=False,
@@ -14,14 +15,15 @@ from models.user import User
 def all_places_in_city(city_id):
     """get all places in city
     """
+
+    """ Fetches the city by ID and class """
     selected_city = storage.get(City, city_id)
     json_repr = []
     if selected_city is not None:
-        if request.method == 'GET':
-            for v in storage.all(Place).values():
-                if v.city_id == city_id:
-                    json_repr.append(v.to_dict())
-            return make_response(jsonify(json_repr))
+        for v in storage.all(Place).values():
+            if v.city_id == city_id:
+                json_repr.append(v.to_dict())
+        return make_response(jsonify(json_repr))
     else:
         abort(404)
 
