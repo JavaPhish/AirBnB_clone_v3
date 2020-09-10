@@ -20,9 +20,13 @@ def all_places_in_city(city_id):
     selected_city = storage.get(City, city_id)
     json_repr = []
     if selected_city is not None:
+        """ Loop through all places and search for all matching
+            city IDs
+        """
         for v in storage.all(Place).values():
             if v.city_id == city_id:
                 json_repr.append(v.to_dict())
+        """ JSON the output then respond """
         return make_response(jsonify(json_repr))
     else:
         abort(404)
