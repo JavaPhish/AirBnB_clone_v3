@@ -79,7 +79,7 @@ def post_place(city_id):
         if data is None:
             return make_response(jsonify(error="Not a JSON"), 400)
 
-        """ The next 2 if statements validate that required keys are present """
+        """ The next if statements validate that required keys are present """
         if 'user_id' not in data.keys():
             return make_response(jsonify(error="Missing user_id"), 400)
 
