@@ -16,6 +16,7 @@ def all_places_in_city(city_id):
     """
     selected_city = storage.get(City, city_id)
     json_repr = []
+
     if selected_city is not None:
         if request.method == 'GET':
             for v in storage.all(Place).values():
