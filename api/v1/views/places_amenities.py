@@ -11,7 +11,7 @@ from os import getenv
 
 @app_views.route("/places/<place_id>/amenities", strict_slashes=False,
                  methods=['GET'])
-def all_amenities(place_id):
+def all_amenities_by_place(place_id):
     """get all amenities for
     given place
     """
@@ -33,5 +33,38 @@ def all_amenities(place_id):
                 for amenity in place.amenity_ids:
                     list_amenities.append(amenity.to_dict())
                 return make_response(jsonify(list_amenities))
+            else:
+                abort(404)
+
+
+@app_views.route("/places/<place_id>/amenities/<amenity_id>",
+                 strict_slashes=False,
+                 methods=['DELETE', 'POST'])
+def delete_amenity_by_place(place_id, amenity_id):
+    """delete amenity for
+    given place
+    """
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        if request.method == 'DELETE':
+            place = storage.get(Place, place_id)
+            if place is not None:
+                for amenity in place.amenities:
+                    if amenity.id == amenity_id:
+                        amenity.delete()
+                        storage.save()
+                        return make_response(jsonify({}), 200)
+                abort(404)
+            else:
+                abort(404)
+    else:
+        if request.method == 'DELETE':
+            place = storage.get(Place, place_id)
+            if place is not None:
+                for amenity in place.amenity_ids:
+                    if amenity.id == amenity_id:
+                        amenity.delete()
+                        storage.save()
+                        return make_response(jsonify({}), 200)
+                abort(404)
             else:
                 abort(404)
