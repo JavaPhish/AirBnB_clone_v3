@@ -39,7 +39,7 @@ def all_amenities_by_place(place_id):
 
 @app_views.route("/places/<place_id>/amenities/<amenity_id>",
                  strict_slashes=False,
-                 methods=['DELETE', 'POST'])
+                 methods=['DELETE'])
 def delete_amenity_by_place(place_id, amenity_id):
     """delete amenity for
     given place
@@ -66,5 +66,46 @@ def delete_amenity_by_place(place_id, amenity_id):
                         storage.save()
                         return make_response(jsonify({}), 200)
                 abort(404)
+            else:
+                abort(404)
+
+
+@app_views.route("/places/<place_id>/amenities/<amenity_id>",
+                 strict_slashes=False,
+                 methods=['POST'])
+def post_amenity_by_place(place_id, amenity_id):
+    """add amenity for
+    given place
+    """
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        if request.method == 'POST':
+            place = storage.get(Place, place_id)
+            if place is not None:
+                check_amenity = storage.get(Amenity, amenity_id)
+                for amenity in place.amenities:
+                    if amenity.id == amenity_id:
+                        return make_response(jsonify(amenity.to_dict()), 200)
+                if check_amenity is not None:
+                    place.amenities.append(check_amenity)
+                    storage.save()
+                    return make_response(jsonify(check_amenity.to_dict()), 201)
+                else:
+                    abort(404)
+            else:
+                abort(404)
+    else:
+        if request.method == 'POST':
+            place = storage.get(Place, place_id)
+            if place is not None:
+                check_amenity = storage.get(Amenity, amenity_id)
+                for amenity in place.amenity_ids:
+                    if amenity.id == amenity_id:
+                        return make_response(jsonify(amenity.to_dict()), 200)
+                if check_amenity is not None:
+                    place.amenity_ids.append(check_amenity)
+                    storage.save()
+                    return make_response(jsonify(check_amenity.to_dict()), 201)
+                else:
+                    abort(404)
             else:
                 abort(404)
