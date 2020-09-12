@@ -133,8 +133,8 @@ def put_place(place_id):
         for name, value in data.items():
             if name not in ignore_keys and hasattr(selected_place, name):
                 setattr(selected_place, name, value)
-                selected_place.save()
-                put_response = jsonify(selected_place.to_dict())
-                return make_response(put_response, 200)
+        selected_place.save()
+        put_response = jsonify(selected_place.to_dict())
+        return make_response(put_response, 200)
     """ if we made it this far we couldnt find anything so 404 """
     abort(404)
